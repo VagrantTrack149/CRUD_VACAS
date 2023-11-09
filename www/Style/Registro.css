@@ -1,0 +1,14 @@
+body{
+    background: rgb(237, 208, 208);
+    background: linear-gradient();
+}
+.card-img-left{
+    width: 45%;
+    background: url('../Images/Login_placeholder.jpg');
+    background-size: cover;
+}
+.btn-login{
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem;
+    padding: 0.75rem 1rem;
+}
