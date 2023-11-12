@@ -35,7 +35,7 @@
                 Procesos
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="../medcamento.php">A1(medicamento)</a>
+                <a class="dropdown-item" href="../Medicamento.php">A1(medicamento)</a>
                 <a class="dropdown-item" href="#">A2</a>
                 <a class="dropdown-item" href="#">A3</a>
                 <div class="dropdown-divider"></div>
