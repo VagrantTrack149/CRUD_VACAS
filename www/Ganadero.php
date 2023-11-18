@@ -43,13 +43,12 @@
         <input type="text" class="form-control" id="campo3" name="campo3">
       </div>
       <div class="form-group">
-      <select class="form-select form-select-lg mb-3" aria-label="Small select example">
+      <select class="form-select" aria-label="Default select example">
           <option selected>Externo</option>
           <option selected>Trabajador(interno)</option>
         </select>
       </div>
       <button type="submit" class="btn btn-primary">Añadir</button>
-      <button type="submit" class="btn btn-secondary">Lista de Medicamento</button>
     </div>
   </div>
 </div>
@@ -61,7 +60,7 @@
           <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar">
           <div class="input-group-append">
             <button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button class="btn btn-success" type="button"><i class="fa-solid fa-capsules"></i><i class="fa-solid fa-plus"></i></button>
+            <button class="btn btn-success" type="button"><i class="fa-solid fa-hat-cowboy"></i><i class="fa-solid fa-plus"></i></button>
           </div>
         </div>
       </div>
@@ -88,9 +87,9 @@
         <td>Localidad</td>
         <td>Municipio</td>
         <td>Estado</td>
-        <td><button class="btn btn-success apply"><i class="fa-solid fa-shield-virus"></i>
+        <td>
         <button class="btn btn-primary edit"><i class="fa-solid fa-pen-to-square"></i></button>
-        <button class="btn btn-danger delete"><i class="fa-solid fa-trash"></i></button></button></td>
+        <button class="btn btn-danger delete"><i class="fa-solid fa-trash"></i></button></td>
       </tr>
       
     </tbody>

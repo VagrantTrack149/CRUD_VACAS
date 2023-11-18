@@ -16,3 +16,9 @@
 .taco{
     margin: 0 auto;
 }
+.Titulo{
+    margin: 0 auto;
+    width: 50%;
+    text-align: center;
+    align-self: center;
+}

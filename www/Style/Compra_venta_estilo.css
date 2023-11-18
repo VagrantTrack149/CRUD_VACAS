@@ -1,0 +1,13 @@
+.card-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    flex: 1;
+    margin: 10px;
+}
+
+.compra_venta {
+    clear: both; /* This will make sure it appears below the others */
+}
