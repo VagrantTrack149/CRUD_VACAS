@@ -35,13 +35,19 @@
                 Almacen
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="../Medicamento.php">Medicamento</a>
-                <a class="dropdown-item" href="../Comida.php">Comida</a>
+                <a class="dropdown-item" href="Medicamento.php">Medicamento</a>
+                <a class="dropdown-item" href="Comida.php">Comida</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="Ganadero.php">Ganaderos</a>
         </li>
+        <li class="nav-item">
+            <a href="Ganancias.php" class="nav-link">Ganancias</a>
+        </li>
         </ul>
+        <li class="nav-item">
+            <a href="../srv/logout.php" class="btn btn-danger btn-lg" role="button" aria-disabled="true">Salir</a>
+        </li>
   </div>
 </nav>
 </header>

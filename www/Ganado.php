@@ -1,3 +1,4 @@
+<?php include 'class/Conexion.php';?>
 <?php 
     session_start();
     include 'Template/header.php'; 
@@ -28,11 +29,21 @@
         </tr>
       </thead>
       <tbody>
+        <?php 
+          $query="SELECT Lote, Llegada FROM Lote";
+          $select_lotes = mysqli_query(connect(), $query);
+          while($row=mysqli_fetch_array($select_lotes)){          
+        ?>
         <tr>
-          <td>1</td>
-          <td><h8> Contador</h8></td>
-          <td><button class="btn btn-success apply"><i class="fa-solid fa-cow"></i></button></td>
+          <td><?php echo $row['Lote']?></td>
+          <td><?php echo $row['Llegada']?></td>
+          <td>
+            <a role="button" aria-disabled="true"class="btn btn-success apply" href="Ganado_detalles.php?id=<?php echo $row['lote'];?>">
+              <i class="fa-solid fa-cow"></i>
+            </a>
+          </td>
         </tr>
+        <?php }?>
       </tbody>
     </table>
   </div>

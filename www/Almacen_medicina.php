@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="style/Control.css">
 <div class="container mx-auto text-center Taco">
 <div class="Subtitulo">
-        <h3>Almacen de medicina</h3>
+        <h3>Recetas</h3>
     </div>
   <div class="flex-fill">
     <div class="row">
@@ -17,7 +17,8 @@
           <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar">
           <div class="input-group-append">
             <button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button class="btn btn-success" type="button"><i class="fa-solid fa-cow"></i><i class="fa-solid fa-plus"></i></button>
+            <a class="btn btn-success" role="button" aria-disabled="true" href="Medicamento.php"><i class="fa-solid fa-capsules"></i><i class="fa-solid fa-plus"></i></a>
+            <a href="Receta_plus.php" class="btn btn-secondary" role="button" aria-disabled></a>
           </div>
         </div>
       </div>
@@ -33,9 +34,11 @@
       <tbody>
         <tr>
           <td>1</td>
-          <td><h8>Antiseptico</h8></td>
-          <td><button class="btn btn-success apply"><i class="fa-solid fa-pen-to-square"></i></button>
-          <button class="btn btn-danger delete"><i class="fa-solid fa-trash"></i></button>
+          <td><h8>Antiseptico 5cm, No se que 4cm</h8></td>
+          <td>
+            <a class="btn btn-success" role="button" aria-disabled="true" href="./srv/Consumir_medicina.php"><i class="fa-solid fa-shield-virus"></i></a>
+            <button class="btn btn-primary apply"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button class="btn btn-danger delete"><i class="fa-solid fa-trash"></i></button>
           </td>
         </tr>
       </tbody>
