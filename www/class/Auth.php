@@ -3,7 +3,7 @@
     class Auth extends Conexion{
         public function register($nombre, $email, $password){
             $conexion = parent::connect();
-            $sql= "INSERT INTO prueba.usuarios(nombre,email,password) VALUES (?,?,?)";
+            $sql= "INSERT INTO Granja.usuarios(nombre,email,password) VALUES (?,?,?)";
             $query =$conexion ->prepare($sql);
             $query->bind_param('sss',$nombre,$email,$password);
             return $query->execute();

@@ -1,8 +1,8 @@
 <?php 
-    class conexion{
+    class Conexion{
         public $servidor ='db';
-        public $usuario= 'user';
-        public $password ='test';
+        public $usuario= 'root';
+        public $password ='clave';
         public $DB='Granja';
         public $port= 3306;
         public function connect(){

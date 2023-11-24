@@ -1,10 +1,5 @@
-<?php include 'class/Conexion.php';?>
 <?php 
-    session_start();
     include 'Template/header.php'; 
-    if (!isset($_SESSION['usuario'])) {
-        header("location:index.php");
-    }
 ?>   
 <link rel="stylesheet" href="style/Control.css">
 <div class="container mx-auto text-center Taco">
@@ -24,21 +19,25 @@
       <thead>
         <tr>
           <th>Lote</th>
+          <th>Fecha de llegada</th>
           <th>Cantidad de animales</th>
+          <th>Peso(KG)</th>
           <th>Opciones</th>
         </tr>
       </thead>
       <tbody>
         <?php 
-          $query="SELECT Lote, Llegada FROM Lote";
-          $select_lotes = mysqli_query(connect(), $query);
+          $query="SELECT Lote, Llegada,Cantidad,Peso_Lote FROM Lote";
+          $select_lotes = mysqli_query($conn, $query);
           while($row=mysqli_fetch_array($select_lotes)){          
         ?>
         <tr>
           <td><?php echo $row['Lote']?></td>
           <td><?php echo $row['Llegada']?></td>
+          <td><?php echo $row['Cantidad']?></td>
+          <td><?php echo $row['Peso_Lote']?></td>
           <td>
-            <a role="button" aria-disabled="true"class="btn btn-success apply" href="Ganado_detalles.php?id=<?php echo $row['lote'];?>">
+            <a role="button" aria-disabled="true"class="btn btn-success apply" href="srv/Ganado_detalles.php?id=<?php echo $row['Lote'];?>">
               <i class="fa-solid fa-cow"></i>
             </a>
           </td>

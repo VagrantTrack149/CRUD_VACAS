@@ -1,7 +1,14 @@
+<?php 
+    session_start();
+if (!isset($_SESSION['usuario'])) {
+        header("location:index.php");
+    }
+    $conn= mysqli_connect('db','root','clave',"Granja");
+?>    
 <!doctype html>
 <html lang="es">
 <head>
-    <title>Cafeteria</title>
+    <title>Granja</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -15,9 +22,9 @@
     <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
         <div class="container">
-            <a href="index.php" class="navbar-brand">
-                <img src="./images/Login_placeholder.jpg" style="width: 30px;" class="rounded-circle">
-                Cafeteria
+            <a href="../inicio.php" class="navbar-brand">
+                <img src="../images/Login_placeholder.jpg" style="width: 30px;" class="rounded-circle">
+                Granja el rosario
             </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -25,24 +32,24 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-            <a class="nav-link" href="Ganado.php" aria-current="page">Ganado(Lotes)</a>
+            <a class="nav-link" href="../Ganado.php" aria-current="page">Ganado(Lotes)</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="Compra_venta.php" aria-current="page">Compra y Venta</a>
+            <a class="nav-link" href="../Compra_venta.php" aria-current="page">Compra y Venta</a>
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Almacen
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="Medicamento.php">Medicamento</a>
-                <a class="dropdown-item" href="Comida.php">Comida</a>
+                <a class="dropdown-item" href="../Medicamento.php">Medicamento</a>
+                <a class="dropdown-item" href="../Comida.php">Comida</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="Ganadero.php">Ganaderos</a>
+            <a class="nav-link" href="../Ganadero.php">Ganaderos</a>
         </li>
         <li class="nav-item">
-            <a href="Ganancias.php" class="nav-link">Ganancias</a>
+            <a href="../Ganancias.php" class="nav-link">Ganancias</a>
         </li>
         </ul>
         <li class="nav-item">

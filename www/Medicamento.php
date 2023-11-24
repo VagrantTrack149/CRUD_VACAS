@@ -1,9 +1,5 @@
 <?php 
-    session_start();
     include 'Template/header.php'; 
-    if (!isset($_SESSION['usuario'])) {
-        header("location:index.php");
-    }
 ?>   
 <link rel="stylesheet" href="style/Control.css">
 <div class="container d-flex">
@@ -56,7 +52,7 @@
     <tbody>
       <tr>
         <td>1</td>
-        <td><h4> Receta</h4></td>
+        <td>Medicamento_1</td>
         <td>
         <a class="btn btn-primary edit" role="button" aria-disabled="true" href="./srv/Editar_medicamento.php"><i class="fa-solid fa-pen-to-square"></i></a>
         <a class="btn btn-danger delete" role="button" aria-disabled="true"href="./srv/Eliminar_medicamento.php"><i class="fa-solid fa-trash"></i></button></button></td>
