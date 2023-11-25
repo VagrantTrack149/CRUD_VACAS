@@ -1,9 +1,10 @@
 <?php 
     session_start();
-if (!isset($_SESSION['usuario'])) {
-        header("location:index.php");
+    if (!isset($_SESSION['usuario'])) {
+        header("location:../index.php");
+    }else{
+        $conn= mysqli_connect('db','root','clave',"Granja");
     }
-    $conn= mysqli_connect('db','root','clave',"Granja");
 ?>    
 <!doctype html>
 <html lang="es">
@@ -16,6 +17,7 @@ if (!isset($_SESSION['usuario'])) {
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/2dad747e84.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../Style/header.css">  
 </head>
 
 <body>
@@ -52,9 +54,13 @@ if (!isset($_SESSION['usuario'])) {
             <a href="../Ganancias.php" class="nav-link">Ganancias</a>
         </li>
         </ul>
+        <li class="nav-item usuario_identificador">
+            <a ><?php echo $_SESSION['usuario'];?></a>
+        </li>
         <li class="nav-item">
             <a href="../srv/logout.php" class="btn btn-danger btn-lg" role="button" aria-disabled="true">Salir</a>
         </li>
+</div>
   </div>
 </nav>
 </header>
