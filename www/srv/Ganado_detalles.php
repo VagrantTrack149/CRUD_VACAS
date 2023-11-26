@@ -2,7 +2,11 @@
     include '../Template/header.php'; 
     if(isset($_GET['id'])){
         $id=$_GET['id'];
+        $termino = isset($_GET['termino']) ? $_GET['termino']:'';
         $query="SELECT No_Arete, Sexo,Edad,Peso,Estado,Precio FROM Ganado WHERE $id=Ganado.Lote";
+        if(!empty($termino)){
+          $query.= " ,Lote LIKE '$termino'";
+        }
         $select_ganado = mysqli_query($conn, $query);   
     }
 ?>   
@@ -12,11 +16,9 @@
     <div class="row">
       <div class="col-md-12">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar">
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button class="btn btn-success" type="button"><i class="fa-solid fa-cow"></i><i class="fa-solid fa-plus"></i></button>
-          </div>
+            <a class="btn btn-success" type="button" href="Ganado_plus.php?Lote=<?php echo $id?>">
+              <i class="fa-solid fa-cow"></i><i class="fa-solid fa-plus"></i>
+            </a>
         </div>
       </div>
     </div>
@@ -34,6 +36,7 @@
       </thead>
       <tbody>
         <?php 
+        
           while($row=mysqli_fetch_array($select_ganado)){          
         ?>
         <tr>

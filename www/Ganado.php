@@ -7,11 +7,17 @@
     <div class="row">
       <div class="col-md-12">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar">
+          <form action="srv/busqueda_lote.php" method="GET">
+          <input type="text" class="form-control" name="termino" placeholder="Buscar" aria-label="Buscar">
           <div class="input-group-append">
-            <button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button class="btn btn-success" type="button"><i class="fa-solid fa-cow"></i><i class="fa-solid fa-plus"></i></button>
+            <button class="btn btn-outline-primary" type="submit">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <a role="button" aria-disabled="true"class="btn btn-success apply" href="srv/Lote_plus.php">
+              <i class="fa-solid fa-cow"></i><i class="fa-solid fa-plus"></i>
+            </a>
           </div>
+          </form>
         </div>
       </div>
     </div>
@@ -26,8 +32,12 @@
         </tr>
       </thead>
       <tbody>
-        <?php 
+        <?php
+        $termino = isset($_GET['termino']) ? $_GET['termino']:'';
           $query="SELECT Lote, Llegada,Cantidad,Peso_Lote FROM Lote";
+          if(!empty($termino)){
+            $query.= " WHERE Lote LIKE '$termino'";
+          }
           $select_lotes = mysqli_query($conn, $query);
           while($row=mysqli_fetch_array($select_lotes)){          
         ?>

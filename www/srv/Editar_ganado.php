@@ -16,14 +16,14 @@
             $precio=$row['Precio'];
         }
         if (isset($_POST['edit'])){
-            $id=$_GET['id'];
-            $sex= $_GET['Sexo'];
-            $edad=$_GET['Edad'];
-            $lote=$_GET['Lote'];
-            $peso=$_GET['Peso'];
-            $estado=$_GET['Estado'];
-            $precio=$_GET['Precio'];
-            $query= "UPDATE Ganado SET No_Arete='$id',Sexo=$sex,Edad=$edad,Lote=$lote,Peso=$peso,Estado='$estado',Precio=$precio WHERE Ganado.No_Arete='$id'";
+            $id=$_POST['Numero_de_arete']; // Nombre de campo corregido
+            $sex= $_POST['Sexo'];
+            $edad=$_POST['Edad'];
+            $lote=$_POST['Lote'];
+            $peso=$_POST['Peso'];
+            $estado=$_POST['Estado'];
+            $precio=$_POST['Precio'];
+            $query= "UPDATE Ganado SET No_Arete='$id', Sexo=$sex, Edad=$edad, Lote=$lote, Peso=$peso, Estado='$estado', Precio=$precio WHERE Ganado.No_Arete='$id'";
             $result= mysqli_query($conn,$query);    
             #$_SESSION['Message'] ='Registro del animal editado con exito';
             #$_SESSION['Message_type'] ='Success';
@@ -38,7 +38,7 @@
             <div class="card card-body">
                 <form action="Editar_ganado.php?id=<?php echo $_GET['No_Arete'];?>" method="POST">
                 <div class="from-group">
-                        <input type="text" name="Numero de arete" value="<?php   echo $id;    ?>" class="from-control" placeholder="Numero de arete">
+                        <input type="text" name="Numero_de_arete" value="<?php   echo $id;    ?>" class="from-control" placeholder="Numero de arete">
                     </div>
                     <div class="from-group">
                         <input type="text" name="Sexo" value="<?php   echo $sex;    ?>" class="from-control" placeholder="Sexo 1-MACHO 0-HEMBRA">
