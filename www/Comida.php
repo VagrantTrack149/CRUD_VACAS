@@ -48,7 +48,7 @@
     <thead>
       <tr>
         <th>Etapa</th>
-        <th>Recetas</th>
+        <th>Alimento</th>
         <th>Consumir, Editar y Eliminar</th>
         
       </tr>
@@ -56,7 +56,7 @@
     <tbody>
       <tr>
         <td>1</td>
-        <td><h8> Receta</h4></td>
+        <td><h8> Alimento</h4></td>
         <td><button class="btn btn-success apply" href="./srv/Consumir_comida.php"><i class="fa-solid fa-plate-wheat"></i></i>
         <button class="btn btn-primary edit" href="./srv/Editar_comida.php"><i class="fa-solid fa-pen-to-square"></i></button>
         <button class="btn btn-danger delete" href="./srv/Eliminar_comida.php"><i class="fa-solid fa-trash"></i></button></button></td>
@@ -65,6 +65,46 @@
     </tbody>
   </table>
 </div>
-
 </div>
+
+<div class="col-md-12">
+<table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Lote</th>
+          <th>Fecha de llegada</th>
+          <th>Cantidad de animales</th>
+          <th>Peso(KG)</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $termino = isset($_GET['termino']) ? $_GET['termino']:'';
+          $query="SELECT Lote, Llegada,Cantidad,Peso_Lote FROM Lote";
+          if(!empty($termino)){
+            $query.= " WHERE Lote LIKE '$termino'";
+          }
+          $select_lotes = mysqli_query($conn, $query);
+          while($row=mysqli_fetch_array($select_lotes)){          
+        ?>
+        <tr>
+          <td><?php echo $row['Lote']?></td>
+          <td><?php echo $row['Llegada']?></td>
+          <td><?php echo $row['Cantidad']?></td>
+          <td><?php echo $row['Peso_Lote']?></td>
+          <td>
+            <a role="button" aria-disabled="true"class="btn btn-success apply" href="srv/Ganado_detalles.php?id=<?php echo $row['Lote'];?>">
+              <i class="fa-solid fa-cow"></i>
+            </a>
+            <a role="button" aria-disabled="true"class="btn btn-danger apply" href="srv/Eliminar_lote.php?id=<?php echo $row['Lote'];?>">
+            <i class="fa-solid fa-delete-left"></i>
+            </a>
+            
+          </td>
+        </tr>
+        <?php }?>
+      </tbody>
+    </table>
+  </div>
   <?php include 'Template/footer.php'; ?>

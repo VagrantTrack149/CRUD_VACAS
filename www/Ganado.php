@@ -50,6 +50,10 @@
             <a role="button" aria-disabled="true"class="btn btn-success apply" href="srv/Ganado_detalles.php?id=<?php echo $row['Lote'];?>">
               <i class="fa-solid fa-cow"></i>
             </a>
+            <a role="button" aria-disabled="true"class="btn btn-danger apply" href="srv/Eliminar_lote.php?id=<?php echo $row['Lote'];?>">
+            <i class="fa-solid fa-delete-left"></i>
+            </a>
+            
           </td>
         </tr>
         <?php }?>
