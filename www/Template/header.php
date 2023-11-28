@@ -26,7 +26,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
         <div class="container">
             <a href="../inicio.php" class="navbar-brand">
-                <img src="../images/Login_placeholder.jpg" style="width: 30px;" class="rounded-circle">
+                <img src="../images/imagen2.png" style="width: 30px;" class="rounded-circle">
                 Granja el rosario
             </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

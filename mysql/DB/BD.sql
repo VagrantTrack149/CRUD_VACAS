@@ -86,6 +86,8 @@ create table Granja.recetas(
     id_receta int not null auto_increment primary key,
     id_comida int,
     cantidad float not null,
+    id_receta_comida int,
+    Etapa varchar(50),
     INDEX (cantidad),
     foreign key (id_comida) references Granja.Comida(id_comida)
 );

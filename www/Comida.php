@@ -14,19 +14,21 @@
        </div>
       <div class="card-body">
         <div class="form-group">
+          <form action="srv/comida_plus.php" method="POST">
           <label for="campo1">Descripción</label>
-            <input type="text" class="form-control" id="campo1" name="campo1">
+            <input type="text" class="form-control" id="campo1" name="Descripcion">
         </div>
         <div class="form-group">
           <label for="campo2">Cantidad</label>
-            <input type="text" class="form-control" id="campo2" name="campo2">
+            <input type="text" class="form-control" id="campo2" name="Cantidad">
         </div>
         <div class="form-group">
           <label for="campo3">Precio</label>
-            <input type="text" class="form-control" id="campo3" name="campo3">
+            <input type="text" class="form-control" id="campo3" name="Precio">
         </div>
           <button type="submit" class="btn btn-primary">Añadir</button>
-          <button class="btn btn-secondary" href="Almacen_comida.php">Añadir receta</button>
+        </form>
+          <a class="btn btn-success" type="button" href="./srv/Receta_plus.php">Añadir receta <i class="fa-solid fa-utensils"></i><i class="fa-solid fa-plus"></i></a>
         </div>
       </div>
   </div>
@@ -38,7 +40,6 @@
           <input type="text" class="form-control" placeholder="Buscar y añadir recetas" aria-label="Buscar">
             <div class="input-group-append">
               <button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button class="btn btn-success" type="button" href="./srv/Receta_plus.php"><i class="fa-solid fa-utensils"></i><i class="fa-solid fa-plus"></i></button>
             </div>
         </div>
       </div>
@@ -62,9 +63,8 @@
                     <td><?php echo $row['cantidad'] ?></td>
                     <td><?php echo $row['Descripcion'] ?></td>
                     <td>
-                        <button class="btn btn-success apply" href="./srv/Consumir_comida.php"><i class="fa-solid fa-plate-wheat"></i></i></button>
-                        <button class="btn btn-primary edit" href="./srv/Editar_comida.php"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="btn btn-danger delete" href="./srv/Eliminar_comida.php"><i class="fa-solid fa-trash"></i></button>
+                        <a role="button" aria-disabled="true" class="btn btn-primary apply" href="./srv/Editar_comida.php?id=<?php echo $row['id_comida']?>"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a class="btn btn-danger delete" href="./srv/Eliminar_comida.php?id=<?php echo $row['id_comida']?>"><i class="fa-solid fa-trash"></i></a>
                     </td>
                 </tr>
                 <?php }?>
@@ -85,30 +85,29 @@
     <tbody>
       <?php
         $query = "SELECT
-        c.id_comida,
-        CONCAT(c.Descripcion, ' - ', r.cantidad) AS Descripcion_Cantidad,
-        c.cantidad AS Cantidad_Comida,
-        c.precio,
-        r.id_receta,
-        r.cantidad AS Cantidad_Receta
-        FROM
+        r.id_receta_comida,
+        r.Etapa,
+        GROUP_CONCAT(CONCAT(c.Descripcion, ' - ', r.cantidad) SEPARATOR '<br>') AS Descripcion_Cantidad
+    FROM
         Granja.Comida c
-        INNER JOIN
-        Granja.recetas r ON c.id_comida = r.id_comida;";
+    INNER JOIN
+        Granja.recetas r ON c.id_comida = r.id_comida
+    GROUP BY r.id_receta_comida, r.Etapa
+    LIMIT 0, 25;";
         $select_lotes = mysqli_query($conn, $query);
         while ($row = mysqli_fetch_array($select_lotes)) {
       ?>
       <tr>
-        <td><?php echo $row['id_receta'] ?></td>
+        <td><?php echo $row['Etapa'] ?></td>
         <td><?php echo $row['Descripcion_Cantidad'] ?></td>
         <td>
-          <button class="btn btn-success apply" href="./srv/Consumir_comida.php">
+          <button class="btn btn-success apply" href="./srv/Consumir_receta.php">
             <i class="fa-solid fa-plate-wheat"></i>
           </button>
-          <a role="button" aria-disabled="true" class="btn btn-primary apply" href="srv/Ganado_detalles.php?id=<?php echo $row['Lote']; ?>">
+          <a role="button" aria-disabled="true" class="btn btn-primary apply" href="srv/Editar_receta.php?id=<?php echo $row['Lote']; ?>">
             <i class="fa-solid fa-cow"></i>
           </a>
-          <a role="button" aria-disabled="true" class="btn btn-danger apply" href="srv/Eliminar_lote.php?id=<?php echo $row['Lote']; ?>">
+          <a role="button" aria-disabled="true" class="btn btn-danger apply" href="srv/Eliminar_receta.php?id=<?php echo $row['Lote']; ?>">
             <i class="fa-solid fa-delete-left"></i>
           </a>
         </td>

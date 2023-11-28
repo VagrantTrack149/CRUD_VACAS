@@ -1,8 +1,6 @@
 <?php 
     include "../Template/header.php";
-    if(isset($_GET['id'])){
-        $id=$_GET['id'];
-        $query = "DELETE FROM Comida WHERE id_comida ='$id'";
+        $query = "CALL MoverDetalleRecetaARecetas();";
         $result= mysqli_query($conn, $query);
         if (!$result) {
             #$_SESSION['Message'] ='Producto No eliminado';
@@ -15,5 +13,5 @@
         #header("location: ../Ganado.php");
         echo "<script>window.location.href='../Comida.php';</script>";
         }
-    }
+    
 ?>
