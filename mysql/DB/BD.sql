@@ -73,76 +73,43 @@ CREATE table Granja.Ganado(
     foreign key (Lote) references Granja.Lote(Lote)
 );
 
-
-create table Granja.Comida(
-    id_comida int not null auto_increment primary key,
-    Descripcion varchar(50) not null,
+CREATE TABLE Granja.Dieta(
+    id_dieta int primary key auto_increment,
+    Dieta text not null
+);
+CREATE TABLE Granja.Producto(
+    id_producto int primary key auto_increment,
+    Producto text not null
+);
+CREATE TABLE Granja.DetalleDieta(
+    idDetalleDieta int not null primary key auto_increment,
+    id_dieta int not null,
+    id_producto int not null,
+    foreign key (id_dieta) references Granja.Dieta(id_dieta),
+    foreign key (id_producto) references Granja.Producto(id_producto)
+);
+CREATE TABLE Granja.Stock(
+    id_stock int primary key auto_increment,
+    id_producto int not null,
     cantidad float not null,
     precio float not null,
-    INDEX (cantidad),
-    INDEX (precio)
+    foreign key (id_producto) references Granja.Producto(id_producto)
 );
-
-create table Granja.recetas(
-    id_receta int not null auto_increment primary key,
-    id_comida int,
-    cantidad float not null,
-    INDEX (cantidad),
-    foreign key (id_comida) references Granja.Comida(id_comida)
-);
-create table Granja.detallerecetas(
-    id_detalle_receta int not null auto_increment primary key,
-    id_comida int,
-    cantidad float not null,
-    INDEX (cantidad),
-    foreign key (id_comida) references Granja.Comida(id_comida)
-);
-
-CREATE table Granja.CoComidas(
-    id_Cocomida int not null auto_increment primary key,
-    id_comida int,
-    cantidad_resultante float,
-    precio float,
-    INDEX (id_comida),
-    INDEX (precio),
-    foreign key (id_comida) references Granja.Comida(id_comida)
-);
-CREATE TABLE Granja.costocomida (
-    id_costocomida INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    fecha DATETIME NOT NULL,
-    Lote INT NOT NULL,
-    precio FLOAT NOT NULL,
-    INDEX (precio),
-    FOREIGN KEY (Lote) REFERENCES Granja.Lote(Lote)
-);
-
-create table Granja.Medicina(
-    id_medicina int not null auto_increment primary key,
-    Descripcion varchar(100) not null,
-    cantidad float not null,
-    precio float not null,
-    INDEX (cantidad),
-    INDEX (precio)
-);
-
-CREATE TABLE Granja.costomedicina(
-    id_costomedicina int not null auto_increment primary key,
+CREATE TABLE Granja.consumos(
+    id_consumo int primary key auto_increment,
+    id_dieta int not null,
     fecha DATETIME not null,
-    Lote int not null,
-    precio float not null,
-    INDEX (precio),
-    foreign key (Lote) references Granja.Lote(Lote)
+    lote int not null,
+    inversion float not null,
+    foreign key (id_dieta) references Granja.Dieta(id_dieta)
 );
-
 create table Granja.Ganado_gasto(
     id_gasto_ganado int not null auto_increment primary key,
     Lote int not null,
     precio_comida float not null,
     precio_medicina float not null,
     Total float not null,
-    foreign key (Lote) references Granja.Lote(Lote),
-    foreign key (precio_medicina) references Granja.costomedicina(precio),
-    foreign key (precio_comida) references Granja.costocomida(precio)  
+    foreign key (Lote) references Granja.Lote(Lote)
 );
 
 DELIMITER $$
@@ -166,15 +133,48 @@ BEGIN
 END$$
 DELIMITER ;
 
+
+-- Trigger para AFTER INSERT
 DELIMITER //
 
-CREATE PROCEDURE InsertarDetalleReceta(IN p_id_comida INT, IN p_cantidad FLOAT, IN v_id_receta_comida INT)
+CREATE TRIGGER ActualizarPesoCantidadLote_Insert
+AFTER INSERT ON Granja.Ganado
+FOR EACH ROW
 BEGIN
+    UPDATE Granja.Lote
+    SET Peso_Lote = (SELECT SUM(Peso) FROM Granja.Ganado WHERE Lote = NEW.Lote),
+        Cantidad = (SELECT COUNT(*) FROM Granja.Ganado WHERE Lote = NEW.Lote)
+    WHERE Lote = NEW.Lote;
+END //
 
-    -- Establecer un valor constante para id_receta_comida
-    -- Insertar datos en DetalleRecetas
-    INSERT INTO Granja.DetalleRecetas (id_comida, cantidad, id_receta_comida)
-    VALUES (p_id_comida, p_cantidad, v_id_receta_comida);
+DELIMITER ;
+
+-- Trigger para AFTER UPDATE
+DELIMITER //
+
+CREATE TRIGGER ActualizarPesoCantidadLote_Update
+AFTER UPDATE ON Granja.Ganado
+FOR EACH ROW
+BEGIN
+    UPDATE Granja.Lote
+    SET Peso_Lote = (SELECT SUM(Peso) FROM Granja.Ganado WHERE Lote = NEW.Lote),
+        Cantidad = (SELECT COUNT(*) FROM Granja.Ganado WHERE Lote = NEW.Lote)
+    WHERE Lote = NEW.Lote;
+END //
+
+DELIMITER ;
+
+-- Trigger para AFTER DELETE
+DELIMITER //
+
+CREATE TRIGGER ActualizarPesoCantidadLote_Delete
+AFTER DELETE ON Granja.Ganado
+FOR EACH ROW
+BEGIN
+    UPDATE Granja.Lote
+    SET Peso_Lote = (SELECT SUM(Peso) FROM Granja.Ganado WHERE Lote = OLD.Lote),
+        Cantidad = (SELECT COUNT(*) FROM Granja.Ganado WHERE Lote = OLD.Lote)
+    WHERE Lote = OLD.Lote;
 END //
 
 DELIMITER ;
