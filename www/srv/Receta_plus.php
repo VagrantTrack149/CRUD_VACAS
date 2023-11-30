@@ -23,15 +23,28 @@ unset($_SESSION['Message_type']);
         <div class="col-md-6">
             <!-- Tabla de productos búsqueda -->
             <div class="table-container">
-                <h2 class="table-title">Búsqueda</h2>
-                <form method="GET" action="buscar.php">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="termino" placeholder="Buscar producto">
-                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
+                <h2 class="table-title">Comida disponible</h2>
+                <div class="input-group mb-3">
+                    <div class="dropdown">
+                        <form action="agregar_comida_receta.php" method="POST">
+                        <select class="form-select" aria-label="Default select example" name="receta_comida">
+                            <option selected value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                        </select>
                     </div>
-                </form>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -39,17 +52,12 @@ unset($_SESSION['Message_type']);
                             <th>Cantidad</th>
                             <th>Precio</th>
                             <th>Cantidad a comprar</th>
-                            <th>Etapa</th>
                             <th>Accion</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $termino = isset($_GET['termino']) ? $_GET['termino'] : '';
                         $query = "SELECT * FROM `Comida`";
-                        if (!empty($termino)) {
-                            $query .= " WHERE Descripcion LIKE '%$termino%'";
-                        }
                         $select_productos = mysqli_query($conn, $query);
 
                         while ($row = mysqli_fetch_array($select_productos)) {
@@ -60,12 +68,8 @@ unset($_SESSION['Message_type']);
                                 <td><?php echo $row['cantidad']; ?></td>
                                 <td><?php echo $row['precio']; ?></td>
                                 <td>
-                                    <form action="agregar_comida_receta.php" method="POST">
                                         <input type="number" min="1" name="cantidad_venta" max="<?php echo $maxCantidad; ?>" class="form-control" value="1">
-                                        <input type="hidden" name="id" value="<?php echo $row['Descripcion']; ?>">
-                                </td>
-                                <td>
-                                    <input type="text" name="Etapa">
+                                        <input type="hidden" name="id" value="<?php echo $row['id_comida']; ?>">
                                 </td>
                                 <td>
                                     <button type="submit" class="btn btn-primary">
@@ -100,12 +104,11 @@ unset($_SESSION['Message_type']);
                         c.precio AS Precio_Comida,
                         c.Descripcion AS Descripcion_Comida
                     FROM
-                        Granja.DetalleReceta dr
+                        Granja.detallerecetas dr
                     JOIN
-                        Granja.Comida c ON dr.id_comida = c.id_comida;
-                    ";
+                        Granja.Comida c ON dr.id_comida = c.id_comida
+                    WHERE id_receta_comida =";
                         $select_productos = mysqli_query($conn, $query);
-
                         while ($row = mysqli_fetch_array($select_productos)) {
                             ?>
                             <tr>

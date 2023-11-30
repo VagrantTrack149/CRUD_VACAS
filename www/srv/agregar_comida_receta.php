@@ -1,11 +1,11 @@
 <?php 
 include '../Template/header.php';
 
-if(isset($_POST['cantidad_venta']) && isset($_POST['id']) && isset($_POST['Etapa'])){
+if(isset($_POST['cantidad_venta']) && isset($_POST['id']) && isset($_POST['receta_comida'])){
     $id = $_POST['id'];
     $cantidad = $_POST['cantidad_venta'];
-    $Etapa=$_POST['Etapa'];
-    $query = "CALL CrearDetalleReceta('$id', $cantidad,'$Etapa');";
+    $receta_comida=$_POST['receta_comida'];
+    $query = "CALL InsertarDetalleReceta($id, $cantidad,$receta_comida);";
     $result = mysqli_query($conn, $query);
     if (!$result) {
         $_SESSION['Message'] ='Producto no insertado';

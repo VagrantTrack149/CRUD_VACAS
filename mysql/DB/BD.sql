@@ -1,3 +1,4 @@
+CREATE DATABASE Granja;
 CREATE table Granja.ganadero(
     id_ganadero int not null auto_increment PRIMARY KEY,
     psg varchar(12) not null,
@@ -86,8 +87,13 @@ create table Granja.recetas(
     id_receta int not null auto_increment primary key,
     id_comida int,
     cantidad float not null,
-    id_receta_comida int,
-    Etapa varchar(50),
+    INDEX (cantidad),
+    foreign key (id_comida) references Granja.Comida(id_comida)
+);
+create table Granja.detallerecetas(
+    id_detalle_receta int not null auto_increment primary key,
+    id_comida int,
+    cantidad float not null,
     INDEX (cantidad),
     foreign key (id_comida) references Granja.Comida(id_comida)
 );
@@ -95,17 +101,19 @@ create table Granja.recetas(
 CREATE table Granja.CoComidas(
     id_Cocomida int not null auto_increment primary key,
     id_comida int,
-    cantidad_almacen float,
-    Cantidad_receta float,
+    cantidad_resultante float,
     precio float,
     INDEX (id_comida),
-    INDEX (cantidad_almacen),
-    INDEX (Cantidad_receta),
     INDEX (precio),
-    foreign key (id_comida) references Granja.Comida(id_comida),
-    foreign key (cantidad_almacen) references Granja.Comida(cantidad),
-    foreign key (Cantidad_receta) references Granja.recetas(cantidad),
-    foreign key (precio) references Granja.Comida(precio)
+    foreign key (id_comida) references Granja.Comida(id_comida)
+);
+CREATE TABLE Granja.costocomida (
+    id_costocomida INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    fecha DATETIME NOT NULL,
+    Lote INT NOT NULL,
+    precio FLOAT NOT NULL,
+    INDEX (precio),
+    FOREIGN KEY (Lote) REFERENCES Granja.Lote(Lote)
 );
 
 create table Granja.Medicina(
@@ -117,34 +125,56 @@ create table Granja.Medicina(
     INDEX (precio)
 );
 
-create table Granja.Medcetas(
-    id_medceta int not null auto_increment primary key,
-    id_medicina int,
-    cantidad float not null,
-    INDEX (cantidad),
-    foreign key (id_medicina) references Granja.Medicina(id_medicina)
-);
-
-CREATE table Granja.CoMediciona(
-    id_CoMedicina int not null auto_increment primary key,
-    id_medicina int,
-    cantidad_almacen float,
-    Cantidad_receta float,
-    precio float,
-    INDEX (id_medicina),
-    INDEX (cantidad_almacen),
-    INDEX (Cantidad_receta),
+CREATE TABLE Granja.costomedicina(
+    id_costomedicina int not null auto_increment primary key,
+    fecha DATETIME not null,
+    Lote int not null,
+    precio float not null,
     INDEX (precio),
-    foreign key (id_medicina) references Granja.Medicina(id_medicina),
-    foreign key (cantidad_almacen) references Granja.Medicina(cantidad),
-    foreign key (Cantidad_receta) references Granja.Medcetas(cantidad),
-    foreign key (precio) references Granja.Medicina(precio)
+    foreign key (Lote) references Granja.Lote(Lote)
 );
 
 create table Granja.Ganado_gasto(
+    id_gasto_ganado int not null auto_increment primary key,
     Lote int not null,
     precio_comida float not null,
     precio_medicina float not null,
     Total float not null,
-    foreign key (Lote) references Granja.Lote(Lote)
+    foreign key (Lote) references Granja.Lote(Lote),
+    foreign key (precio_medicina) references Granja.costomedicina(precio),
+    foreign key (precio_comida) references Granja.costocomida(precio)  
 );
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `InsertarLoteConGanado`()
+BEGIN
+    -- Declarar variables para almacenar el último valor de lote y el consecutivo
+    DECLARE ultimoLote INT;
+    DECLARE nuevoConsecutivo INT;
+
+    -- Obtener el último valor de lote
+    SELECT MAX(Lote) INTO ultimoLote FROM Granja.Lote;
+
+    -- Calcular el nuevo consecutivo
+    SET nuevoConsecutivo = COALESCE(ultimoLote, 0) + 1;
+
+    -- Insertar el nuevo lote con el consecutivo
+    INSERT INTO Granja.Lote(Lote, Peso_Lote, Estado, Llegada, Salida, Cantidad)
+    VALUES (nuevoConsecutivo, NULL, 'Engorda', NOW(), NULL, 0);
+
+ 
+END$$
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE InsertarDetalleReceta(IN p_id_comida INT, IN p_cantidad FLOAT, IN v_id_receta_comida INT)
+BEGIN
+
+    -- Establecer un valor constante para id_receta_comida
+    -- Insertar datos en DetalleRecetas
+    INSERT INTO Granja.DetalleRecetas (id_comida, cantidad, id_receta_comida)
+    VALUES (p_id_comida, p_cantidad, v_id_receta_comida);
+END //
+
+DELIMITER ;

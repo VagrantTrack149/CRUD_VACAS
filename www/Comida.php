@@ -86,13 +86,12 @@
       <?php
         $query = "SELECT
         r.id_receta_comida,
-        r.Etapa,
         GROUP_CONCAT(CONCAT(c.Descripcion, ' - ', r.cantidad) SEPARATOR '<br>') AS Descripcion_Cantidad
     FROM
         Granja.Comida c
     INNER JOIN
         Granja.recetas r ON c.id_comida = r.id_comida
-    GROUP BY r.id_receta_comida, r.Etapa
+    GROUP BY r.id_receta_comida
     LIMIT 0, 25;";
         $select_lotes = mysqli_query($conn, $query);
         while ($row = mysqli_fetch_array($select_lotes)) {
