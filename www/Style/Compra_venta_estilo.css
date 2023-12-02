@@ -3,11 +3,26 @@
     flex-wrap: wrap;
 }
 
+.container-sm {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .card {
-    flex: 1;
-    margin: 10px;
+    flex: 1; /* Ocupa todo el espacio disponible */
+    margin: 5px;
 }
 
 .compra_venta {
-    clear: both; /* This will make sure it appears below the others */
+    clear: both; 
+}
+
+.form-group {
+    width: 100%; /* O ajusta según necesidades */
+}
+
+@media (min-width: 768px) {
+    .card {
+        flex: 0 0 calc(25% - 10px);
+    }
 }

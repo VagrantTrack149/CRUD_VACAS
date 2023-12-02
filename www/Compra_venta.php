@@ -1,82 +1,79 @@
 <?php 
-    session_start();
-    include 'Template/header.php'; 
-    if (!isset($_SESSION['usuario'])) {
-        header("location:index.php");
+include 'Template/header.php'; 
+if (!isset($_SESSION['usuario'])) {
+    header("location:index.php");
+}
+
+// Obtener PSG y Lote de la URL
+if(isset($_GET['psg']) && isset($_GET['lote'])){
+    $psg = $_GET['psg'];
+    $lote = $_GET['lote'];
+
+    // Obtener información del ganadero
+    $query_ganadero = "SELECT * FROM ganadero WHERE psg = '$psg'";
+    $result_ganadero = mysqli_query($conn, $query_ganadero);
+    if(mysqli_num_rows($result_ganadero) == 1) { 
+        $row_ganadero = mysqli_fetch_array($result_ganadero);
+        $id = $row_ganadero['psg'];
+        $Name = $row_ganadero['nombre'];
+        $Rancho = $row_ganadero['razonsocial'];
+        $Domicilio = $row_ganadero['domicilio'];
+        $Localidad = $row_ganadero['localidad'];
+        $Municipio = $row_ganadero['Municipio'];
+        $Estado = $row_ganadero['Estado'];
     }
+}
 ?>
-<?php 
-    if(isset($_GET['id'])){
-        $id=$_GET['id'];
-        $query= "SELECT * FROM ganadero WHERE psg = '$id'";
-        $result= mysqli_query($conn,$query);
-        if (mysqli_num_rows($result)==1) { 
-            $row=mysqli_fetch_array($result);
-            $id =$row['psg'];
-            $Name =$row['nombre'];
-            $Rancho=$row['razonsocial'];
-            $Domicilio=$row['domicilio'];
-            $Localidad=$row['localidad'];
-            $Municipio=$row['Municipio'];
-            $Estado=$row['Estado'];
-        }}?>
 <link rel="stylesheet" href="style/Compra_venta.css">
 <div class="container-sm card-group">
-    <div class="card">
+    <div class="card ">
         <h4>Ganadero (PSG)</h4>
         <div class="card-body">
-      <div class="form-group">
-        <form action="./srv/Ganadero_plus.php" method="POST">
-        <label for="campo1">PSG</label>
-        <input type="text" class="form-control" id="campo1" name="PSG" value="<?php echo $id ?>">
-      </div>
-      <div class="form-group">
-        <label for="campo2">Nombre Completo</label>
-        <input type="text" class="form-control" id="campo2" name="NAME" value="<?php echo $Name ?>">
-      </div>
-      <div class="form-group">
-        <label for="campo3">Rancho</label>
-        <input type="text" class="form-control" id="campo3" name="RANCH" value="<?php echo $Rancho ?>">
-      </div>
-      <div class="form-group">
-        <label for="campo3">Domicilio</label>
-        <input type="text" class="form-control" id="campo3" name="ADRESS" value="<?php echo $Domicilio ?>">
-      </div>
-      <div class="form-group">
-        <label for="campo3">Localidad</label>
-        <input type="text" class="form-control" id="campo3" name="LOCATION" value="<?php echo $Localidad ?>">
-      </div>
-      <div class="form-group">
-        <label for="campo3">Municipio</label>
-        <input type="text" class="form-control" id="campo3" name="MUNI" value="<?php echo $Municipio ?>">
-      </div>
-      <div class="form-group">
-        <label for="campo3">Estado</label>
-        <input type="text" class="form-control" id="campo3" name="STATE" value="<?php echo $Estado ?>">
-      </div>
-      <button type="submit" class="btn btn-success">Añadir <i class="fa-solid fa-hat-cowboy"></i><i class="fa-solid fa-plus"></i></button>
-    </div>
-    </form>
+            <div class="form-group">
+                <label for="campo1">PSG</label>
+                <input type="text" class="form-control" id="campo1" name="PSG" value="<?php echo $id ?>" disabled>
+            </div>
+            <div class="form-group">
+                <label for="campo2">Nombre Completo</label>
+                <input type="text" class="form-control" id="campo2" name="NAME" value="<?php echo $Name ?>" disabled>
+            </div>
+            <div class="form-group">
+                <label for="campo3">Rancho</label>
+                <input type="text" class="form-control" id="campo3" name="RANCH" value="<?php echo $Rancho ?>" disabled>
+            </div>
+            <div class="form-group">
+                <label for="campo3">Domicilio</label>
+                <input type="text" class="form-control" id="campo3" name="ADRESS" value="<?php echo $Domicilio ?>" disabled>
+            </div>
+            <div class="form-group">
+                <label for="campo3">Localidad</label>
+                <input type="text" class="form-control" id="campo3" name="LOCATION" value="<?php echo $Localidad ?>" disabled>
+            </div>
+            <div class="form-group">
+                <label for="campo3">Municipio</label>
+                <input type="text" class="form-control" id="campo3" name="MUNI" value="<?php echo $Municipio ?>" disabled>
+            </div>
+            <div class="form-group">
+                <label for="campo3">Estado</label>
+                <input type="text" class="form-control" id="campo3" name="STATE" value="<?php echo $Estado ?>" disabled>
+            </div>
+        </div>
     </div>
 
     <div class="card">
-    <h4>Lote detalles</h4>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                Lote informacion
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            $termino = isset($_GET['termino']) ? $_GET['termino'] : '';
-            $query = "SELECT Lote, Llegada, Cantidad, Peso_Lote FROM Lote";
-            if (!empty($termino)) {
-                $query .= " WHERE Lote LIKE '$termino'";
-            }
-            $select_lotes = mysqli_query($conn, $query);
-            while ($row = mysqli_fetch_array($select_lotes)) {
-            ?>
+        <h4>Lote detalles</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Lote informacion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $query = "SELECT Lote, Llegada, Cantidad, Peso_Lote FROM Lote WHERE lote=$lote";
+                $select_lotes = mysqli_query($conn, $query);
+                while ($row = mysqli_fetch_array($select_lotes)) {
+                ?>
                 <tr>
                     <td> Lote: <?php echo $row['Lote'] ?></td>
                 </tr>
@@ -89,60 +86,55 @@
                 <tr>
                     <td>Peso(KG): <?php echo $row['Peso_Lote'] ?></td>
                 </tr>
-            <?php } ?> <!-- Cierra el bucle while aquí -->
-        </tbody>
-    </table>
-</div>
-
-  <div class="card">
-    <h4>Operación</h4>
-    <div class="card-body">
-      <h4 class="card-title">Registro de Venta o Compra</h4>
-      
-      <form action="procesar_formulario.php" method="post">
-        <div class="form-group">
-          <label for="operacion">Operación:</label>
-          <select class="form-control" id="operacion" name="operacion">
-            <option value="venta">Venta</option>
-            <option value="compra">Compra</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="origen">Origen:</label>
-          <input type="text" class="form-control" id="origen" name="origen" required>
-        </div>
-
-        <div class="form-group">
-          <label for="destino">Destino:</label>
-          <input type="text" class="form-control" id="destino" name="destino" required>
-        </div>
-
-        <div class="form-group">
-          <label for="especie">Especie:</label>
-          <select class="form-control" id="especie" name="especie" disabled>
-            <option value="bobino" selected>Bobino</option>
-            <!-- Puedes agregar más opciones aquí si es necesario -->
-          </select>
-        </div>
-  </div>
-</div>
-  <div class="card">
-  <div class="card-body">
-      <h4 class="card-title">Registro de Total y Fecha</h4>
-      
-      <form action="procesar_formulario.php" method="post">
-        <div class="form-group">
-          <label for="total">Total:</label>
-          <input type="number" class="form-control" id="total" name="total" required>
-        </div>
-
-      </form>
+                <?php } ?>
+            </tbody>
+        </table>
     </div>
-  </div>
-</div>
-<div class="card compra_venta">
-  <button type="submit" class="btn-primary">Realizar</button>
-</div>
 
+    <form action="Compra_venta_logica.php" method="POST">
+        <div class="card">
+            <h4>Operación</h4>
+            <div class="card-body">
+                <h4 class="card-title">Registro de Venta o Compra</h4>
+                 <form action="procesar_formulario.php" method="post">
+                    <div class="form-group">
+                        <label for="operacion">Operación:</label>
+                        <select class="form-control" id="operacion" name="operacion">
+                            <option value="venta">Venta</option>
+                            <option value="compra">Compra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="origen">Origen:</label>
+                        <input type="text" class="form-control" id="origen" name="origen" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="destino">Destino:</label>
+                        <input type="text" class="form-control" id="destino" name="destino" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="especie">Especie:</label>
+                            <select class="form-control" id="especie" name="especie" disabled>
+                                <option value="bobino" selected>Bobino</option>
+                            </select>
+                    </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Registro de Total y Fecha</h4>
+                    <form action="procesar_formulario.php" method="post">
+                        <div class="form-group">
+                            <label for="total">Total:</label>
+                                <input type="number" class="form-control" id="total" name="total" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn-primary">Relizar</button>
+                        </div>
+            </div>
+        </div>
+    </form>
+</div>
 <?php include 'Template/footer.php'; ?>

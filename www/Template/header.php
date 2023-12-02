@@ -38,7 +38,7 @@
             <a class="nav-link" href="../Ganado.php" aria-current="page">Ganado(Lotes)</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="../Compra_venta.php" aria-current="page">Compra y Venta</a>
+            <a class="nav-link" href="../srv/Compra_venta_psg.php" aria-current="page">Compra y Venta</a>
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
