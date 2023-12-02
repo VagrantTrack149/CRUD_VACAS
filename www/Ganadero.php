@@ -43,12 +43,6 @@
         <label for="campo3">Estado</label>
         <input type="text" class="form-control" id="campo3" name="STATE">
       </div>
-      <div class="form-group">
-      <select class="form-select" aria-label="Default select example">
-          <option selected>Externo</option>
-          <option selected>Trabajador(interno)</option>
-        </select>
-      </div>
       <button type="submit" class="btn btn-success">Añadir <i class="fa-solid fa-hat-cowboy"></i><i class="fa-solid fa-plus"></i></button>
     </div>
     </form>

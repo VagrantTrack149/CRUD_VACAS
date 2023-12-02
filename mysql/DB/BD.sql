@@ -9,18 +9,7 @@ CREATE table Granja.ganadero(
     Municipio varchar(100) not null,
     Estado varchar(100) not null
 );
-
-CREATE table Granja.responsables(
-    id_responsable int not null auto_increment PRIMARY KEY,
-    psg varchar(12) not null,
-    nombre varchar(150) not null,
-    razonsocial varchar(100) not null,
-    domicilio varchar(150) not null,
-    localidad varchar(150) not null,
-    Municipio varchar(100) not null,
-    Estado varchar(100) not null
-);
-
+--Usar para ligar las transacciones
 CREATE table Granja.usuarios(
     id_usuarios int not null auto_increment,
     nombre varchar(50) not null,
@@ -41,9 +30,9 @@ CREATE table Granja.Lote(
 CREATE table Granja.Transaccion(
     Num_fact int not null auto_increment primary key,
     id_ganadero int,
-    id_responsable int,
+    id_usuario int,
     foreign key (id_ganadero) references Granja.ganadero(id_ganadero),
-    foreign key (id_responsable) references Granja.responsables(id_responsable)
+    foreign key (id_usuario) references Granja.usuarios(id_usuarios)
 );
 
 CREATE table Granja.Factura(
@@ -105,6 +94,7 @@ CREATE TABLE Granja.consumos(
     inversion float not null,
     foreign key (id_dieta) references Granja.Dieta(id_dieta)
 );
+--Borrar esta tabla
 create table Granja.Ganado_gasto(
     id_gasto_ganado int not null auto_increment primary key,
     Lote int not null,
