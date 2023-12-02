@@ -89,11 +89,12 @@ if ($_GET['id']) {
                                 <td><?php echo $row['cantidad']; ?></td>
                                 <td><?php echo $row['precio']; ?></td>
                                 <td>
-                                    <form action="delete_venta.php" method="POST">
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fa-solid fa-eraser"></i>
-                                    </button>
-                                    <a href="?id=<?php echo $row['id_producto']; ?>">
+                                    <form action="Eliminar_DetalleDieta.php" method="POST">
+                                        <input type="hidden" name="id_producto" value="<?php echo $row['id_producto']; ?>">
+                                    <input type="hidden" name="id_dieta" value="<?php echo $id; ?>">
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fa-solid fa-eraser"></i>
+                                        </button>
                                     </form>
                                 </td>
                             </tr>

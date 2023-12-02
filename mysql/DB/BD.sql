@@ -99,7 +99,7 @@ CREATE TABLE Granja.Stock(
 );
 CREATE TABLE Granja.consumos(
     id_consumo int primary key auto_increment,
-    id_dieta int not null,
+    id_dieta int,
     fecha DATETIME not null,
     lote int not null,
     inversion float not null,
