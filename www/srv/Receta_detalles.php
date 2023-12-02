@@ -1,11 +1,7 @@
 <?php include "../Template/header.php";?>
 <?php 
-        $query= "SELECT MAX(id_dieta) AS 'id_ultimo' FROM Granja.Dieta;
-        ";
-        $result= mysqli_query($conn,$query);
-        if (mysqli_num_rows($result)==1) { 
-            $row=mysqli_fetch_array($result);
-            $id=$row['id_ultimo'];
+if ($_GET['id']) {
+        $id=$_GET['id'];
     }
 ?>
 <div class="text-center"><h1>EDITOR DE DIETAS</h1></div>
@@ -52,7 +48,8 @@
                                     <form action="agregar_producto_receta.php?id=<?php echo $id ?>" method="POST">
                                         <input type="number" min="1" name="cantidad_max" max="<?php echo $maxCantidad; ?>" class="form-control" value="1">
                                         <input type="hidden" name="id_producto" value="<?php echo $row['id_producto']; ?>">
-                                        <input type="hidden" name="id_dieta" value="<?php $id ?>">
+                                        <input type="hidden" name="id_dieta" value="<?php echo $id; ?>">
+
                                 </td>
                                 <td>
                                     <button type="submit" class="btn btn-primary">
@@ -66,11 +63,7 @@
                 </table>
             </div>
         </div>
-        <?php 
-if (isset($_GET['id'])) {
-        $id=$_GET['id'];
-    }
-?>
+  
         <div class="col-md-6">
             <!-- Tabla de productos compra -->
             <div class="table-container">
@@ -101,7 +94,6 @@ if (isset($_GET['id'])) {
                                         <i class="fa-solid fa-eraser"></i>
                                     </button>
                                     <a href="?id=<?php echo $row['id_producto']; ?>">
-                                        
                                     </form>
                                 </td>
                             </tr>
