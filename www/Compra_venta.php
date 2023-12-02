@@ -90,13 +90,11 @@ if(isset($_GET['psg']) && isset($_GET['lote'])){
             </tbody>
         </table>
     </div>
-
-    <form action="Compra_venta_logica.php" method="POST">
+<form action="./srv/procesar_formulario.php" method="POST">
         <div class="card">
             <h4>Operación</h4>
             <div class="card-body">
                 <h4 class="card-title">Registro de Venta o Compra</h4>
-                 <form action="procesar_formulario.php" method="post">
                     <div class="form-group">
                         <label for="operacion">Operación:</label>
                         <select class="form-control" id="operacion" name="operacion">
@@ -116,7 +114,7 @@ if(isset($_GET['psg']) && isset($_GET['lote'])){
 
                     <div class="form-group">
                         <label for="especie">Especie:</label>
-                            <select class="form-control" id="especie" name="especie" disabled>
+                            <select class="form-control" id="especie" name="especie">
                                 <option value="bobino" selected>Bobino</option>
                             </select>
                     </div>
@@ -125,16 +123,19 @@ if(isset($_GET['psg']) && isset($_GET['lote'])){
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Registro de Total y Fecha</h4>
-                    <form action="procesar_formulario.php" method="post">
                         <div class="form-group">
                             <label for="total">Total:</label>
                                 <input type="number" class="form-control" id="total" name="total" required>
+                            <label for="comentario">Comentario:</label>
+                                <input type="text" name="comentario" id="comentario" class="form-control" required>
+                                <input type="hidden" name="id_ganadero" value="<?php echo $psg?>">
+                                <input type="hidden" name="lote" value="<?php echo $lote?>">
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn-primary">Relizar</button>
                         </div>
             </div>
         </div>
-    </form>
+</form>
 </div>
 <?php include 'Template/footer.php'; ?>

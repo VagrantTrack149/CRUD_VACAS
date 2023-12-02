@@ -1,7 +1,6 @@
 CREATE DATABASE Granja;
 CREATE table Granja.ganadero(
-    id_ganadero int not null auto_increment PRIMARY KEY,
-    psg varchar(12) not null,
+    psg varchar(12) not null primary key,
     nombre varchar(150) not null,
     razonsocial varchar(100) not null,
     domicilio varchar(150) not null,
@@ -9,7 +8,7 @@ CREATE table Granja.ganadero(
     Municipio varchar(100) not null,
     Estado varchar(100) not null
 );
---Usar para ligar las transacciones
+
 CREATE table Granja.usuarios(
     id_usuarios int not null auto_increment,
     nombre varchar(50) not null,
@@ -28,10 +27,10 @@ CREATE table Granja.Lote(
 );
 
 CREATE table Granja.Transaccion(
-    Num_fact int not null auto_increment primary key,
-    id_ganadero int,
+    No_trans int not null auto_increment primary key,
+    psg_ganadero varchar(12) not null,
     id_usuario int,
-    foreign key (id_ganadero) references Granja.ganadero(id_ganadero),
+    foreign key (psg_ganadero) references Granja.ganadero(psg),
     foreign key (id_usuario) references Granja.usuarios(id_usuarios)
 );
 
@@ -47,7 +46,7 @@ CREATE table Granja.Factura(
     Fecha DATETIME not null,
     No_trans int,
     foreign key (Lote) references Granja.Lote(Lote),
-    foreign key (No_trans) references Granja.Transaccion(Num_fact)
+    foreign key (No_trans) references Granja.Transaccion(No_trans)
 );
 
 
@@ -94,14 +93,12 @@ CREATE TABLE Granja.consumos(
     inversion float not null,
     foreign key (id_dieta) references Granja.Dieta(id_dieta)
 );
---Borrar esta tabla
-create table Granja.Ganado_gasto(
-    id_gasto_ganado int not null auto_increment primary key,
-    Lote int not null,
-    precio_comida float not null,
-    precio_medicina float not null,
-    Total float not null,
-    foreign key (Lote) references Granja.Lote(Lote)
+CREATE TABLE Granja.historial(
+    id_monetario int primary key auto_increment,
+    lote int not null,
+    fecha_1 DATETIME not null,
+    fecha_2 DATETIME not null,
+    dinero float not null
 );
 
 DELIMITER $$

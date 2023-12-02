@@ -2,7 +2,7 @@
     include "../Template/header.php";
     if(isset($_POST['psg'])){
         $psg=$_POST['psg'];
-        $query = "SELECT * FROM `ganadero` WHERE psg=$psg";
+        $query = "SELECT * FROM `ganadero` WHERE psg='$psg'";
         $result= mysqli_query($conn, $query);
         if (!$result) {
             #$_SESSION['Message'] ='Producto No eliminado';
