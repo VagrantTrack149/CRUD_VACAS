@@ -15,32 +15,33 @@
     </div>
     <div class="card-body">
       <div class="form-group">
+        <form action="./srv/Ganadero_plus.php" method="POST">
         <label for="campo1">PSG</label>
-        <input type="text" class="form-control" id="campo1" name="campo1">
+        <input type="text" class="form-control" id="campo1" name="PSG">
       </div>
       <div class="form-group">
         <label for="campo2">Nombre Completo</label>
-        <input type="text" class="form-control" id="campo2" name="campo2">
+        <input type="text" class="form-control" id="campo2" name="NAME">
       </div>
       <div class="form-group">
         <label for="campo3">Rancho</label>
-        <input type="text" class="form-control" id="campo3" name="campo3">
+        <input type="text" class="form-control" id="campo3" name="RANCH">
       </div>
       <div class="form-group">
         <label for="campo3">Domicilio</label>
-        <input type="text" class="form-control" id="campo3" name="campo3">
+        <input type="text" class="form-control" id="campo3" name="ADRESS">
       </div>
       <div class="form-group">
         <label for="campo3">Localidad</label>
-        <input type="text" class="form-control" id="campo3" name="campo3">
+        <input type="text" class="form-control" id="campo3" name="LOCATION">
       </div>
       <div class="form-group">
         <label for="campo3">Municipio</label>
-        <input type="text" class="form-control" id="campo3" name="campo3">
+        <input type="text" class="form-control" id="campo3" name="MUNI">
       </div>
       <div class="form-group">
         <label for="campo3">Estado</label>
-        <input type="text" class="form-control" id="campo3" name="campo3">
+        <input type="text" class="form-control" id="campo3" name="STATE">
       </div>
       <div class="form-group">
       <select class="form-select" aria-label="Default select example">
@@ -48,8 +49,9 @@
           <option selected>Trabajador(interno)</option>
         </select>
       </div>
-      <button type="submit" class="btn btn-primary">Añadir</button>
+      <button type="submit" class="btn btn-success">Añadir <i class="fa-solid fa-hat-cowboy"></i><i class="fa-solid fa-plus"></i></button>
     </div>
+    </form>
   </div>
 </div>
 
@@ -79,19 +81,30 @@
       </tr>
     </thead>
     <tbody>
+    <?php
+              $query = "SELECT * FROM Ganadero;
+          ";
+              $select_lotes = mysqli_query($conn, $query);
+              while ($row = mysqli_fetch_array($select_lotes)) {
+            ?>
       <tr>
-        <td>PSG</td>
-        <td><h8> NOMBRE</h4></td>
-        <td>Ranchito</td>
-        <td>Domicilio</td>
-        <td>Localidad</td>
-        <td>Municipio</td>
-        <td>Estado</td>
+        <td><?php echo $row['psg']?></td>
+        <td><?php echo $row['nombre']?></td>
+        <td><?php echo $row['razonsocial']?></td>
+        <td><?php echo $row['domicilio']?></td>
+        <td><?php echo $row['localidad']?></td>
+        <td><?php echo $row['Municipio']?></td>
+        <td><?php echo $row['Estado']?></td>
         <td>
-        <button class="btn btn-primary edit"><i class="fa-solid fa-pen-to-square"></i></button>
-        <button class="btn btn-danger delete"><i class="fa-solid fa-trash"></i></button></td>
+        <a role="button" aria-disabled="true" class="btn btn-primary apply" href="srv/Editar_ganadero.php?id=<?php echo $row['psg']; ?>">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </a>
+        <a role="button" aria-disabled="true" class="btn btn-danger apply" href="srv/Eliminar_ganadero.php?id=<?php echo $row['psg']; ?>">
+          <i class="fa-solid fa-trash"></i>
+        </a>
+      </td>
       </tr>
-      
+      <?php } ?>
     </tbody>
   </table>
 </div>
