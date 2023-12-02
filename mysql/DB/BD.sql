@@ -79,12 +79,14 @@ CREATE TABLE Granja.Dieta(
 );
 CREATE TABLE Granja.Producto(
     id_producto int primary key auto_increment,
-    Producto text not null
+    Producto text not null,
+    categoria int not null
 );
 CREATE TABLE Granja.DetalleDieta(
     idDetalleDieta int not null primary key auto_increment,
     id_dieta int not null,
     id_producto int not null,
+    cantidad float not null
     foreign key (id_dieta) references Granja.Dieta(id_dieta),
     foreign key (id_producto) references Granja.Producto(id_producto)
 );

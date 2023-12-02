@@ -2,7 +2,7 @@
     include "../Template/header.php";
     if(isset($_GET['id'])){
         $id=$_GET['id'];
-        $query = "CALL EliminarProducto($id)";
+        $query = " CALL `BorrarDieta`($id)";
         $result= mysqli_query($conn, $query);
         if (!$result) {
             #$_SESSION['Message'] ='Producto No eliminado';

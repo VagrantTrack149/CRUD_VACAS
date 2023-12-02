@@ -4,6 +4,12 @@
     if (!isset($_SESSION['usuario'])) {
         header("location:index.php");
     }
+    $query= " SELECT MAX(Lote) AS 'ULote' FROM Granja.Lote; ";
+        $result= mysqli_query($conn,$query);
+        if (mysqli_num_rows($result)==1) { 
+            $row=mysqli_fetch_array($result);
+            $ULote=$row['ULote'];
+    }
 ?>   
 <link rel="stylesheet" href="style/Control.css">
 <div class="container d-flex">
@@ -37,10 +43,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Buscar y añadir recetas" aria-label="Buscar">
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
+          
         </div>
       </div>
     </div>
@@ -49,22 +52,28 @@
                 <tr>
                     <th>Cantidad</th>
                     <th>Alimento</th>
+                    <th>Precio por unidad</th>
                     <th>Editar y Eliminar</th>
                 </tr>
             </thead>
             <tbody>
             <?php
-              $query = "SELECT * FROM `Comida`";
+              $query = "SELECT P.Producto, S.cantidad, S.precio, P.id_producto
+              FROM Granja.Producto P
+              INNER JOIN Granja.Stock S ON P.id_producto = S.id_producto
+              WHERE P.categoria = 1;
+          ";
               $select_lotes = mysqli_query($conn, $query);
               while ($row = mysqli_fetch_array($select_lotes)) {
             ?>
       
                 <tr>
                     <td><?php echo $row['cantidad'] ?></td>
-                    <td><?php echo $row['Descripcion'] ?></td>
+                    <td><?php echo $row['Producto'] ?></td>
+                    <td><?php echo $row['precio'] ?></td>
                     <td>
-                        <a role="button" aria-disabled="true" class="btn btn-primary apply" href="./srv/Editar_comida.php?id=<?php echo $row['id_comida']?>"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a class="btn btn-danger delete" href="./srv/Eliminar_comida.php?id=<?php echo $row['id_comida']?>"><i class="fa-solid fa-trash"></i></a>
+                        <a role="button" aria-disabled="true" class="btn btn-primary apply" href="./srv/Editar_comida.php?id=<?php echo $row['id_producto']?>"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a class="btn btn-danger delete" href="./srv/Eliminar_comida.php?id=<?php echo $row['id_producto']?>"><i class="fa-solid fa-trash"></i></a>
                     </td>
                 </tr>
                 <?php }?>
@@ -77,36 +86,33 @@
   <table class="table table-bordered Taco">
     <thead>
       <tr>
-        <th>Etapa</th>
+        <th>Dieta</th>
         <th>Receta</th>
+        <th>Lote</th>
         <th>Opciones</th>
       </tr>
     </thead>
     <tbody>
       <?php
-        $query = "SELECT
-        r.id_receta_comida,
-        GROUP_CONCAT(CONCAT(c.Descripcion, ' - ', r.cantidad) SEPARATOR '<br>') AS Descripcion_Cantidad
-    FROM
-        Granja.Comida c
-    INNER JOIN
-        Granja.recetas r ON c.id_comida = r.id_comida
-    GROUP BY r.id_receta_comida
-    LIMIT 0, 25;";
+        $query = "CALL `MostrarDetallesDieta_General`();";
         $select_lotes = mysqli_query($conn, $query);
         while ($row = mysqli_fetch_array($select_lotes)) {
       ?>
       <tr>
-        <td><?php echo $row['Etapa'] ?></td>
-        <td><?php echo $row['Descripcion_Cantidad'] ?></td>
+        <td><?php echo $row['NombreDieta'] ?></td>
+        <td><?php echo $row['DetalleProducto'] ?></td>
+        <form action="./srv/Consumir_receta.php" method="POST">
+        <td><input type="number" min="1" name="lote" max="<?php echo $ULote; ?>" class="form-control" value="1"></td>
+            <input type="hidden" name="id_dieta" id="id_dieta" value="<?php echo $row['id_dieta']; ?>"> 
         <td>
-          <button class="btn btn-success apply" href="./srv/Consumir_receta.php">
+          <button class="btn btn-success apply" type="submit">
             <i class="fa-solid fa-plate-wheat"></i>
           </button>
-          <a role="button" aria-disabled="true" class="btn btn-primary apply" href="srv/Editar_receta.php?id=<?php echo $row['Lote']; ?>">
+        </form>
+          <a role="button" aria-disabled="true" class="btn btn-primary apply" href="srv/Receta_detalles.php?id=<?php echo $row['id_dieta']; ?>">
             <i class="fa-solid fa-cow"></i>
           </a>
-          <a role="button" aria-disabled="true" class="btn btn-danger apply" href="srv/Eliminar_receta.php?id=<?php echo $row['Lote']; ?>">
+          <a role="button" aria-disabled="true" class="btn btn-danger apply" href="srv/Eliminar_receta.php?id=<?php echo $row['id_dieta']; ?>">
             <i class="fa-solid fa-delete-left"></i>
           </a>
         </td>
