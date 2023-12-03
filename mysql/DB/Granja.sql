@@ -508,3 +508,442 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `BorrarDieta`(IN dieta_id INT)
+BEGIN
+    -- Borra los detalles de la dieta en la tabla DetalleDieta
+    DELETE FROM Granja.DetalleDieta WHERE id_dieta = dieta_id;
+
+    -- Borra la dieta en la tabla Dieta
+    DELETE FROM Granja.Dieta WHERE id_dieta = dieta_id;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `EditarProducto`(
+    IN p_id_producto INT,
+    IN p_nuevo_producto TEXT,
+    IN p_nueva_cantidad FLOAT,
+    IN p_nuevo_precio FLOAT
+)
+BEGIN
+    -- Actualizar la tabla Producto
+    UPDATE Granja.Producto
+    SET Producto = p_nuevo_producto
+    WHERE id_producto = p_id_producto;
+
+    -- Actualizar la tabla Stock
+    UPDATE Granja.Stock
+    SET cantidad = p_nueva_cantidad,
+        precio = p_nuevo_precio
+    WHERE id_producto = p_id_producto;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `EliminarDetalleDieta`(
+    IN p_id_dieta INT,
+    IN p_id_producto INT
+)
+BEGIN
+    DELETE FROM Granja.DetalleDieta
+    WHERE id_dieta = p_id_dieta AND id_producto = p_id_producto;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `EliminarProducto`(
+    IN p_id_producto INT
+)
+BEGIN
+    -- Eliminar de la tabla Stock
+    DELETE FROM Granja.Stock WHERE id_producto = p_id_producto;
+
+    -- Eliminar de la tabla Producto
+    DELETE FROM Granja.Producto WHERE id_producto = p_id_producto;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `InsertarDetalleDieta`(
+    IN p_id_dieta INT,
+    IN p_id_producto INT,
+    IN p_cantidad FLOAT
+)
+BEGIN
+    INSERT INTO Granja.DetalleDieta (id_dieta, id_producto, cantidad)
+    VALUES (p_id_dieta, p_id_producto, p_cantidad);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `InsertarDieta`(
+    IN p_Dieta TEXT
+)
+BEGIN
+    -- Insertar en la tabla Dieta
+    INSERT INTO Granja.Dieta (Dieta)
+    VALUES (p_Dieta);
+
+    -- Imprimir el último ID generado
+    SELECT LAST_INSERT_ID() AS 'UltimoIDGenerado';
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `InsertarGanadero`(
+    IN p_psg VARCHAR(255),
+    IN p_nombre VARCHAR(255),
+    IN p_razonsocial VARCHAR(255),
+    IN p_domicilio VARCHAR(255),
+    IN p_localidad VARCHAR(255),
+    IN p_Municipio VARCHAR(255),
+    IN p_Estado VARCHAR(255)
+)
+BEGIN
+    INSERT INTO `ganadero`(`psg`, `nombre`, `razonsocial`, `domicilio`, `localidad`, `Municipio`, `Estado`)
+    VALUES (p_psg, p_nombre, p_razonsocial, p_domicilio, p_localidad, p_Municipio, p_Estado);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `InsertarLoteConGanado`()
+BEGIN
+    -- Declarar variables para almacenar el último valor de lote y el consecutivo
+    DECLARE ultimoLote INT;
+    DECLARE nuevoConsecutivo INT;
+
+    -- Obtener el último valor de lote
+    SELECT MAX(Lote) INTO ultimoLote FROM Granja.Lote;
+
+    -- Calcular el nuevo consecutivo
+    SET nuevoConsecutivo = COALESCE(ultimoLote, 0) + 1;
+
+    -- Insertar el nuevo lote con el consecutivo
+    INSERT INTO Granja.Lote(Lote, Peso_Lote, Estado, Llegada, Salida, Cantidad)
+    VALUES (nuevoConsecutivo, NULL, 'Engorda', NOW(), NULL, 0);
+
+ 
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `InsertarMedicamentoStock`(
+    IN p_Producto TEXT,
+    IN p_Cantidad FLOAT,
+    IN p_Precio FLOAT
+)
+BEGIN
+    DECLARE v_id_producto INT;
+
+    -- Insertar en la tabla Producto
+    INSERT INTO Granja.Producto (Producto, categoria)
+    VALUES (p_Producto, 2);
+
+    -- Obtener el ID del producto recién insertado
+    SET v_id_producto = LAST_INSERT_ID();
+
+    -- Insertar en la tabla Stock
+    INSERT INTO Granja.Stock (id_producto, cantidad, precio)
+    VALUES (v_id_producto, p_Cantidad, p_Precio);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `InsertarProductoStock`(
+    IN p_Producto TEXT,
+    IN p_Cantidad FLOAT,
+    IN p_Precio FLOAT
+)
+BEGIN
+    DECLARE v_id_producto INT;
+
+    -- Insertar en la tabla Producto
+    INSERT INTO Granja.Producto (Producto, categoria)
+    VALUES (p_Producto, 1);
+
+    -- Obtener el ID del producto recién insertado
+    SET v_id_producto = LAST_INSERT_ID();
+
+    -- Insertar en la tabla Stock
+    INSERT INTO Granja.Stock (id_producto, cantidad, precio)
+    VALUES (v_id_producto, p_Cantidad, p_Precio);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `MostrarConsumos`()
+BEGIN
+    SELECT 
+        c.id_consumo,
+        COALESCE(d.Dieta, 'Medicina') AS Dieta,
+        c.fecha,
+        c.lote,
+        c.inversion
+    FROM
+        Granja.consumos c
+    LEFT JOIN
+        Granja.Dieta d ON c.id_dieta = d.id_dieta;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `MostrarDetallesDieta`(IN dieta_id INT)
+BEGIN
+    SELECT d.Dieta AS NombreDieta, 
+           GROUP_CONCAT(CONCAT(p.Producto, ' - ', dd.cantidad) SEPARATOR '<br>') AS DetalleProducto
+    FROM Granja.Dieta d
+    INNER JOIN Granja.DetalleDieta dd ON d.id_dieta = dd.id_dieta
+    INNER JOIN Granja.Producto p ON dd.id_producto = p.id_producto
+    WHERE d.id_dieta = dieta_id
+    GROUP BY d.id_dieta;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `MostrarDetallesDieta_General`()
+BEGIN
+    SELECT d.Dieta AS NombreDieta, 
+           GROUP_CONCAT(CONCAT(p.Producto, ' - ', dd.cantidad) SEPARATOR '<br>') AS DetalleProducto,
+           d.id_dieta
+    FROM Granja.Dieta d
+    INNER JOIN Granja.DetalleDieta dd ON d.id_dieta = dd.id_dieta
+    INNER JOIN Granja.Producto p ON dd.id_producto = p.id_producto
+    GROUP BY d.id_dieta;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `MostrarFacturas`()
+BEGIN
+    SELECT 
+        f.Fecha,
+        g.nombre AS Ganadero,
+        f.Tipo_VC,
+        f.Total,
+        f.Lote,
+        f.Origen,
+        f.Destino,
+        f.Proposito AS Comentario
+    FROM
+        Granja.Factura f
+    JOIN
+        Granja.Lote l ON f.Lote = l.Lote
+    JOIN
+        Granja.Transaccion t ON f.No_trans = t.No_trans
+    JOIN
+        Granja.ganadero g ON t.psg_ganadero = g.psg;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `ObtenerDetallesDieta`(
+    IN p_id_dieta INT
+)
+BEGIN
+    SELECT D.id_dieta, D.Dieta, P.Producto, DD.idDetalleDieta, DD.id_producto, DD.cantidad, S.precio
+    FROM Granja.Dieta D
+    INNER JOIN Granja.DetalleDieta DD ON D.id_dieta = DD.id_dieta
+    INNER JOIN Granja.Producto P ON DD.id_producto = P.id_producto
+    INNER JOIN Granja.Stock S ON DD.id_producto = S.id_producto
+    WHERE D.id_dieta = p_id_dieta;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `ObtenerProductosCategoria1`()
+BEGIN
+    SELECT P.Producto, S.cantidad, S.precio, P.id_producto
+    FROM Granja.Producto P
+    INNER JOIN Granja.Stock S ON P.id_producto = S.id_producto
+    WHERE P.categoria = 1;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `ObtenerUltimoIdDieta`()
+BEGIN
+    -- Obtener el último ID insertado
+    SELECT MAX(id_dieta) AS 'UltimoIdInsertado' FROM Granja.Dieta;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `ObtenerUltimoNumeroLote`()
+BEGIN
+    -- Obtener el número de lote más grande o el último agregado
+    SELECT MAX(Lote) AS 'UltimoNumeroLote' FROM Granja.Lote;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `RegistrarConsumo`(
+    IN p_id_dieta INT,
+    IN p_id_lote INT
+)
+BEGIN
+    DECLARE v_id_producto INT;
+    DECLARE v_cantidad_consumida FLOAT;
+    DECLARE v_precio_producto FLOAT;
+    
+    -- Declarar variables para controlar el cursor
+    DECLARE no_more_rows BOOLEAN DEFAULT FALSE;
+    
+    -- Declarar cursor para los productos en la dieta
+    DECLARE cursor_productos CURSOR FOR
+        SELECT DD.id_producto, DD.cantidad
+        FROM Granja.DetalleDieta DD
+        WHERE DD.id_dieta = p_id_dieta;
+    
+    -- Declarar handler para no encontrados
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+        SET no_more_rows = TRUE;
+
+    OPEN cursor_productos;
+    
+    -- Inicializar variables del cursor
+    SET no_more_rows = FALSE;
+    
+    -- Iniciar el loop
+    read_loop: LOOP
+        -- Obtener valores del cursor
+        FETCH cursor_productos INTO v_id_producto, v_cantidad_consumida;
+        
+        -- Salir si no hay más filas
+        IF no_more_rows THEN
+            LEAVE read_loop;
+        END IF;
+        
+        -- Obtener el precio del producto desde el stock
+        SELECT precio INTO v_precio_producto
+        FROM Granja.Stock
+        WHERE id_producto = v_id_producto;
+        
+        -- Restar la cantidad consumida del stock
+        UPDATE Granja.Stock
+        SET cantidad = cantidad - v_cantidad_consumida
+        WHERE id_producto = v_id_producto;
+
+        -- Registrar el consumo en la tabla consumos
+        INSERT INTO Granja.consumos (id_dieta, fecha, lote, inversion)
+        VALUES (p_id_dieta, NOW(), p_id_lote, v_cantidad_consumida * v_precio_producto);
+    END LOOP;
+
+    CLOSE cursor_productos;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `RegistrarConsumo_medicina`(
+    IN p_id_producto INT,
+    IN p_lote INT
+)
+BEGIN
+    DECLARE v_cantidad_stock FLOAT;
+    DECLARE v_precio_producto FLOAT;
+
+    -- Obtener la cantidad y el precio del producto desde el stock
+    SELECT cantidad, precio
+    INTO v_cantidad_stock, v_precio_producto
+    FROM Granja.Stock
+    WHERE id_producto = p_id_producto;
+
+    -- Validar si hay suficiente cantidad en el stock
+    IF v_cantidad_stock >= 1 THEN
+        -- Actualizar la cantidad en el stock
+        UPDATE Granja.Stock
+        SET cantidad = cantidad - 1
+        WHERE id_producto = p_id_producto;
+
+        -- Registrar el consumo en la tabla consumos
+        INSERT INTO Granja.consumos (fecha, lote, inversion)
+        VALUES (NOW(), p_lote, v_precio_producto);
+
+        -- Puedes hacer más acciones aquí si es necesario
+
+        SELECT 'Éxito' AS mensaje; -- Puedes devolver un mensaje de éxito si lo deseas
+    ELSE
+        SELECT 'No hay suficiente cantidad en el stock' AS mensaje;
+    END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `RegistrarFactura`(
+    IN p_psg_ganadero VARCHAR(12),
+    IN p_id_usuario INT,
+    IN p_Origen VARCHAR(150),
+    IN p_Destino VARCHAR(150),
+    IN p_Total FLOAT,
+    IN p_Tipo_VC VARCHAR(25),
+    IN p_Proposito TEXT,
+    IN p_Especie VARCHAR(50),
+    IN p_Lote INT
+)
+BEGIN
+    DECLARE v_No_trans INT;
+
+    -- Iniciar una transacción
+    START TRANSACTION;
+
+    -- Insertar en la tabla Transaccion
+    INSERT INTO Granja.Transaccion (psg_ganadero, id_usuario)
+    VALUES (p_psg_ganadero, p_id_usuario);
+
+    -- Obtener el número de transacción generado por auto_increment
+    SET v_No_trans = LAST_INSERT_ID();
+
+    -- Insertar en la tabla Factura
+    INSERT INTO Granja.Factura (Origen, Destino, Total, Tipo_VC, Proposito, Especie, Lote, Fecha, No_trans)
+    VALUES (p_Origen, p_Destino, p_Total, p_Tipo_VC, p_Proposito, p_Especie, p_Lote, NOW(), v_No_trans);
+
+    -- Confirmar la transacción
+    COMMIT;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `ShowHistorial`()
+BEGIN
+    SELECT id_monetario, lote, fecha_1, IFNULL(fecha_2, 'Sigue en el rancho') as fecha_2, dinero
+    FROM Granja.historial;
+
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `UpdateHistorialAfterInsertFactura`(IN newLote INT, IN newTipoVC VARCHAR(25), IN newFecha DATETIME, IN newTotal FLOAT)
+BEGIN
+    DECLARE p_TotalVenta FLOAT;
+    DECLARE p_TotalCompra FLOAT;
+    DECLARE p_TotalConsumos FLOAT;
+
+    IF newTipoVC = 'venta' THEN
+        -- Calcular la suma de ventas y compras
+        SELECT COALESCE(SUM(CASE WHEN Tipo_VC = 'venta' THEN newTotal ELSE 0 END), 0) INTO p_TotalVenta
+        FROM Granja.Factura
+        WHERE Lote = newLote;
+
+        SELECT COALESCE(SUM(CASE WHEN Tipo_VC = 'compra' THEN newTotal ELSE 0 END), 0) INTO p_TotalCompra
+        FROM Granja.Factura
+        WHERE Lote = newLote;
+
+        -- Calcular la suma de consumos relacionados con el lote
+        SELECT COALESCE(SUM(inversion), 0) INTO p_TotalConsumos
+        FROM Granja.consumos
+        WHERE lote = newLote;
+
+        -- Actualizar Lote (establecer Salida como Fecha de Factura)
+        UPDATE Granja.Lote
+        SET Salida = newFecha
+        WHERE Lote = newLote;
+
+        -- Actualizar el historial restando la diferencia entre ventas y compras, y restando los consumos
+        UPDATE Granja.historial
+        SET fecha_2 = NOW(),
+            dinero = (p_TotalVenta - p_TotalCompra - p_TotalConsumos)
+        WHERE lote = newLote AND fecha_2 IS NULL;
+    END IF;
+END$$
+DELIMITER ;
