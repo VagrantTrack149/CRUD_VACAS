@@ -13,7 +13,7 @@
 <div class="container mx-auto text-center taco">
             <table class="table table-bordered">
                 <thead>
-                    <h4>Consumos por lote resumen</h4>
+                    <h4>HISTORIAL POR LOTE</h4>
                     <tr>
                         <th>Lote</th>
                         <th>Fecha llegada</th>
@@ -46,6 +46,10 @@
         </div>
             </tbody>
         </table>
+    </div>
+    <div class="text-center mt-3">
+        <a type="button" class="btn btn-primary" href="../Ganancias.php">Compra y venta resumen</a>
+        <a type="button" class="btn btn-secondary ml-2" href="./Ganancias_2.php">Ver consumos por lote</a>
     </div>
 </div>  
 <?php include '../Template/footer.php'; ?>

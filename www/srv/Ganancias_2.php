@@ -47,5 +47,10 @@
             </tbody>
         </table>
     </div>
+    </div>
+    <div class="text-center mt-3">
+        <a type="button" class="btn btn-primary" href="../Ganancias.php">Compra y venta resumen</a>
+        <a type="button" class="btn btn-secondary ml-2" href="./Ganancias_3.php">Ver Historial de lotes</a>
+    </div>
 </div>  
 <?php include '../Template/footer.php'; ?>

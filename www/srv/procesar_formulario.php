@@ -1,6 +1,5 @@
 <?php 
     include "../Template/header.php";
-
     // Obtener el email del usuario desde la sesión
     $email = $_SESSION['usuario'];
 

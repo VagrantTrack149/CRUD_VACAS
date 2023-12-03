@@ -80,8 +80,7 @@ if ($_GET['id']) {
                     <tbody>
                         <?php
                         $query = "CALL `ObtenerDetallesDieta`($id);";
-                        $select_dieta = mysqli_query($conn, $query);   
-                        echo $query;                   
+                        $select_dieta = mysqli_query($conn, $query);                      
                         while ($row = mysqli_fetch_array($select_dieta)) {
                             ?>
                             <tr>
@@ -110,7 +109,7 @@ if ($_GET['id']) {
     <form action="venta_realizada.php" method="POST">
     <div class="text-center">
         <div class="m-2">
-        <a href="../comida.php"> xd</a>
+        <a href="../comida.php"> GUARDAR RECETA</a>
     </div>
 </div>
 
