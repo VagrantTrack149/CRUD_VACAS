@@ -20,20 +20,24 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `Granja`
 --
+CREATE DATABASE Granja;
 
 DELIMITER $$
 --
 -- Procedimientos
 --
 CREATE DEFINER=`root`@`%` PROCEDURE `BorrarDieta` (IN `dieta_id` INT)   BEGIN
+    START TRANSACTION;
     -- Borra los detalles de la dieta en la tabla DetalleDieta
     DELETE FROM Granja.DetalleDieta WHERE id_dieta = dieta_id;
 
     -- Borra la dieta en la tabla Dieta
     DELETE FROM Granja.Dieta WHERE id_dieta = dieta_id;
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `EditarProducto` (IN `p_id_producto` INT, IN `p_nuevo_producto` TEXT, IN `p_nueva_cantidad` FLOAT, IN `p_nuevo_precio` FLOAT)   BEGIN
+    START TRANSACTION;
     -- Actualizar la tabla Producto
     UPDATE Granja.Producto
     SET Producto = p_nuevo_producto
@@ -44,41 +48,54 @@ CREATE DEFINER=`root`@`%` PROCEDURE `EditarProducto` (IN `p_id_producto` INT, IN
     SET cantidad = p_nueva_cantidad,
         precio = p_nuevo_precio
     WHERE id_producto = p_id_producto;
+
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `EliminarDetalleDieta` (IN `p_id_dieta` INT, IN `p_id_producto` INT)   BEGIN
+    START TRANSACTION;
     DELETE FROM Granja.DetalleDieta
     WHERE id_dieta = p_id_dieta AND id_producto = p_id_producto;
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `EliminarProducto` (IN `p_id_producto` INT)   BEGIN
+    START TRANSACTION;
     -- Eliminar de la tabla Stock
     DELETE FROM Granja.Stock WHERE id_producto = p_id_producto;
 
     -- Eliminar de la tabla Producto
     DELETE FROM Granja.Producto WHERE id_producto = p_id_producto;
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `InsertarDetalleDieta` (IN `p_id_dieta` INT, IN `p_id_producto` INT, IN `p_cantidad` FLOAT)   BEGIN
+    START TRANSACTION;
     INSERT INTO Granja.DetalleDieta (id_dieta, id_producto, cantidad)
     VALUES (p_id_dieta, p_id_producto, p_cantidad);
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `InsertarDieta` (IN `p_Dieta` TEXT)   BEGIN
+    START TRANSACTION;
     -- Insertar en la tabla Dieta
     INSERT INTO Granja.Dieta (Dieta)
     VALUES (p_Dieta);
 
     -- Imprimir el último ID generado
     SELECT LAST_INSERT_ID() AS 'UltimoIDGenerado';
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `InsertarGanadero` (IN `p_psg` VARCHAR(255), IN `p_nombre` VARCHAR(255), IN `p_razonsocial` VARCHAR(255), IN `p_domicilio` VARCHAR(255), IN `p_localidad` VARCHAR(255), IN `p_Municipio` VARCHAR(255), IN `p_Estado` VARCHAR(255))   BEGIN
+    START TRANSACTION;
     INSERT INTO `ganadero`(`psg`, `nombre`, `razonsocial`, `domicilio`, `localidad`, `Municipio`, `Estado`)
     VALUES (p_psg, p_nombre, p_razonsocial, p_domicilio, p_localidad, p_Municipio, p_Estado);
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `InsertarLoteConGanado` ()   BEGIN
+    START TRANSACTION;
     -- Declarar variables para almacenar el último valor de lote y el consecutivo
     DECLARE ultimoLote INT;
     DECLARE nuevoConsecutivo INT;
@@ -93,10 +110,11 @@ CREATE DEFINER=`root`@`%` PROCEDURE `InsertarLoteConGanado` ()   BEGIN
     INSERT INTO Granja.Lote(Lote, Peso_Lote, Estado, Llegada, Salida, Cantidad)
     VALUES (nuevoConsecutivo, NULL, 'Engorda', NOW(), NULL, 0);
 
- 
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `InsertarMedicamentoStock` (IN `p_Producto` TEXT, IN `p_Cantidad` FLOAT, IN `p_Precio` FLOAT)   BEGIN
+    START TRANSACTION;
     DECLARE v_id_producto INT;
 
     -- Insertar en la tabla Producto
@@ -109,9 +127,11 @@ CREATE DEFINER=`root`@`%` PROCEDURE `InsertarMedicamentoStock` (IN `p_Producto` 
     -- Insertar en la tabla Stock
     INSERT INTO Granja.Stock (id_producto, cantidad, precio)
     VALUES (v_id_producto, p_Cantidad, p_Precio);
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `InsertarProductoStock` (IN `p_Producto` TEXT, IN `p_Cantidad` FLOAT, IN `p_Precio` FLOAT)   BEGIN
+    START TRANSACTION;
     DECLARE v_id_producto INT;
 
     -- Insertar en la tabla Producto
@@ -124,6 +144,7 @@ CREATE DEFINER=`root`@`%` PROCEDURE `InsertarProductoStock` (IN `p_Producto` TEX
     -- Insertar en la tabla Stock
     INSERT INTO Granja.Stock (id_producto, cantidad, precio)
     VALUES (v_id_producto, p_Cantidad, p_Precio);
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `MostrarConsumos` ()   BEGIN
@@ -257,6 +278,7 @@ CREATE DEFINER=`root`@`%` PROCEDURE `RegistrarConsumo` (IN `p_id_dieta` INT, IN 
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `RegistrarConsumo_medicina` (IN `p_id_producto` INT, IN `p_lote` INT)   BEGIN
+    START TRANSACTION;
     DECLARE v_cantidad_stock FLOAT;
     DECLARE v_precio_producto FLOAT;
 
@@ -278,9 +300,10 @@ CREATE DEFINER=`root`@`%` PROCEDURE `RegistrarConsumo_medicina` (IN `p_id_produc
         VALUES (NOW(), p_lote, v_precio_producto);
 
         -- Puedes hacer más acciones aquí si es necesario
-
+        COMMIT;
         SELECT 'Éxito' AS mensaje; -- Puedes devolver un mensaje de éxito si lo deseas
     ELSE
+        ROLLBACK;
         SELECT 'No hay suficiente cantidad en el stock' AS mensaje;
     END IF;
 END$$
@@ -313,6 +336,7 @@ CREATE DEFINER=`root`@`%` PROCEDURE `ShowHistorial` ()   BEGIN
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `UpdateHistorialAfterInsertFactura` (IN `newLote` INT, IN `newTipoVC` VARCHAR(25), IN `newFecha` DATETIME, IN `newTotal` FLOAT)   BEGIN
+    START TRANSACTION;
     DECLARE p_TotalVenta FLOAT;
     DECLARE p_TotalCompra FLOAT;
     DECLARE p_TotalConsumos FLOAT;
@@ -342,6 +366,7 @@ CREATE DEFINER=`root`@`%` PROCEDURE `UpdateHistorialAfterInsertFactura` (IN `new
         SET fecha_2 = NOW(),
             dinero = (p_TotalVenta - p_TotalCompra - p_TotalConsumos)
         WHERE lote = newLote AND fecha_2 IS NULL;
+        COMMIT;
     END IF;
 END$$
 
@@ -358,7 +383,7 @@ CREATE TABLE `consumos` (
   `id_dieta` int DEFAULT NULL,
   `fecha` datetime NOT NULL,
   `lote` int NOT NULL,
-  `inversion` float NOT NULL
+  `inversion` float NOT NULL CHECK (inversion >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -404,7 +429,7 @@ CREATE TABLE `DetalleDieta` (
   `idDetalleDieta` int NOT NULL,
   `id_dieta` int NOT NULL,
   `id_producto` int NOT NULL,
-  `cantidad` float NOT NULL
+  `cantidad` float NOT NULL CHECK (cantidad >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -451,7 +476,7 @@ CREATE TABLE `Factura` (
   `No_fact` int NOT NULL,
   `Origen` varchar(150) NOT NULL,
   `Destino` varchar(150) NOT NULL,
-  `Total` float NOT NULL,
+  `Total` float NOT NULL CHECK (Total >= 0),
   `Tipo_VC` varchar(25) NOT NULL,
   `Proposito` text NOT NULL,
   `Especie` varchar(50) NOT NULL,
@@ -583,9 +608,9 @@ DELIMITER ;
 CREATE TABLE `Ganado_gasto` (
   `id_gasto_ganado` int NOT NULL,
   `Lote` int NOT NULL,
-  `precio_comida` float NOT NULL,
-  `precio_medicina` float NOT NULL,
-  `Total` float NOT NULL
+  `precio_comida` float NOT NULL CHECK (precio_comida >= 0),
+  `precio_medicina` float NOT NULL CHECK (precio_medicina >=0),
+  `Total` float NOT NULL CHECK (Total >=0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -599,7 +624,7 @@ CREATE TABLE `historial` (
   `lote` int NOT NULL,
   `fecha_1` datetime NOT NULL,
   `fecha_2` datetime DEFAULT NULL,
-  `dinero` float NOT NULL
+  `dinero` float NOT NULL CHECK (dinero >=0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -617,7 +642,7 @@ INSERT INTO `historial` (`id_monetario`, `lote`, `fecha_1`, `fecha_2`, `dinero`)
 
 CREATE TABLE `Lote` (
   `Lote` int NOT NULL,
-  `Peso_Lote` float DEFAULT NULL,
+  `Peso_Lote` float DEFAULT NULL CHECK (Peso_Lote >=0),
   `Estado` varchar(50) NOT NULL,
   `Llegada` datetime NOT NULL,
   `Salida` datetime DEFAULT NULL,
@@ -682,8 +707,8 @@ INSERT INTO `Producto` (`id_producto`, `Producto`, `Categoria`) VALUES
 CREATE TABLE `Stock` (
   `id_stock` int NOT NULL,
   `id_producto` int NOT NULL,
-  `cantidad` float NOT NULL,
-  `precio` float NOT NULL
+  `cantidad` float NOT NULL CHECK (cantidad >=0),
+  `precio` float NOT NULL CHECK (precio >=0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --

@@ -52,7 +52,7 @@
     </div>
     <div class="text-center mt-3">
         <a type="button" class="btn btn-primary" href="./srv/Ganancias_2.php">Ver consumos por lote</a>
-        <a type="button" class="btn btn-secondary ml-2" href="./srv/Ganancias_3.php">Ver el historial de los lotes</a>
+        <!--<a type="button" class="btn btn-secondary ml-2" href="./srv/Ganancias_3.php">Ver el historial de los lotes</a>-->
     </div>
 </div>  
 <?php include 'Template/footer.php'; ?>
